@@ -1,5 +1,23 @@
 # 100 Conceptual and Basic Questions on MERN Stack
 
+Got it! Here’s a concise and engaging description for your GitHub repository with emojis:
+
+---
+
+**🔍 MERN Stack Interview Prep: 100+ Questions**
+
+🚀 This repository covers MongoDB, Express.js, React, and Node.js with:
+
+- **💡 In-depth Explanations** for each question
+- **📝 Code Examples** to illustrate key concepts
+- **📚 Comprehensive Coverage** of core and advanced topics
+
+Perfect for brushing up on your skills and preparing for interviews. Contribute, learn, and get ready to shine in your next interview!
+
+---
+
+Feel free to tweak it if needed!
+
 ---
 
 ### **1. What are micro and macro queues in JavaScript?**
