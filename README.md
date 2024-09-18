@@ -4269,7 +4269,7 @@ Yes, I understand! You’re looking for a detailed yet clear explanation with a 
 
 ---
 
-**101. An array is declared with `const`, yet we are still able to update or reassign it, such as pushing or pulling elements. Why is this possible?**
+### **101. An array is declared with `const`, yet we are still able to update or reassign it, such as pushing or pulling elements. Why is this possible?**
 
 **Explanation:**
 
@@ -4296,7 +4296,7 @@ console.log(numbers); // Outputs: [1, 2, 3, 4]
 
 ---
 
-**102. Why do we require `express-session`, and what does it do?**
+### **102. Why do we require `express-session`, and what does it do?**
 
 **Explanation:**
 
@@ -4340,7 +4340,7 @@ app.listen(3000);
 
 ---
 
-**103. What is HLS, and what is the role of `.m3u8` files in HLS?**
+### **103. What is HLS, and what is the role of `.m3u8` files in HLS?**
 
 **Explanation:**
 
@@ -4370,7 +4370,7 @@ http://example.com/segment2.ts
 
 ---
 
-**104. What is the `child_process` library in Node.js, and what are its methods, specifically `stdout` and `stderr`?**
+### **104. What is the `child_process` library in Node.js, and what are its methods, specifically `stdout` and `stderr`?**
 
 **Explanation:**
 
@@ -4401,7 +4401,7 @@ exec("ls", (error, stdout, stderr) => {
 
 ---
 
-**105. What does the `fs` (filesystem) library in Node.js do?**
+### **105. What does the `fs` (filesystem) library in Node.js do?**
 
 **Explanation:**
 
@@ -4435,7 +4435,7 @@ fs.writeFile("example.txt", "Hello World!", (err) => {
 
 ---
 
-**106. What are streams and buffers in Node.js?**
+### **106. What are streams and buffers in Node.js?**
 
 **Explanation:**
 
@@ -4468,7 +4468,7 @@ console.log(buffer.toString()); // Outputs: Hello World
 
 ---
 
-**107. What are CLI, terminal, bash, and threading in Node.js?**
+### **107. What are CLI, terminal, bash, and threading in Node.js?**
 
 **Explanation:**
 
@@ -4490,7 +4490,7 @@ node script.js
 
 ---
 
-**108. How can threading be managed and stopped in Node.js?**
+### **108. How can threading be managed and stopped in Node.js?**
 
 **Explanation:**
 
@@ -4522,9 +4522,7 @@ if (isMainThread) {
 
 ---
 
-\*\*109. What are
-
-event emitters in Node.js?\*\*
+### **109. What are event emitters in Node.js?**
 
 **Explanation:**
 
@@ -4553,7 +4551,7 @@ emitter.emit("greet", "Hello, world!");
 
 ---
 
-**110. How does Node.js manage modules?**
+### **110. How does Node.js manage modules?**
 
 **Explanation:**
 
@@ -4580,7 +4578,7 @@ console.log(math.add(2, 3)); // Outputs: 5
 
 ---
 
-**111. How is the Node.js event loop different from the event loop in browsers?**
+### **111. How is the Node.js event loop different from the event loop in browsers?**
 
 **Explanation:**
 
@@ -4604,7 +4602,7 @@ In browsers, the event loop integrates with the rendering engine for smooth visu
 
 ---
 
-**112. What are child processes and parent processes in Node.js?**
+### **112. What are child processes and parent processes in Node.js?**
 
 **Explanation:**
 
@@ -4632,7 +4630,7 @@ const child = exec("ls", (error, stdout, stderr) => {
 
 ---
 
-**113. What is spawning in Node.js?**
+### **113. What is spawning in Node.js?**
 
 **Explanation:**
 
@@ -4668,7 +4666,7 @@ ls.on("close", (code) => {
 
 ---
 
-**114. What is Node.js?**
+### **114. What is Node.js?**
 
 **Explanation:**
 
@@ -4699,7 +4697,7 @@ server.listen(3000, "127.0.0.1", () => {
 
 ---
 
-**115. What is clustering in Node.js?**
+### **115. What is clustering in Node.js?**
 
 **Explanation:**
 
@@ -4741,7 +4739,7 @@ if (cluster.isMaster) {
 
 ---
 
-**116. How is compression handled in Node.js?**
+### **116. How is compression handled in Node.js?**
 
 **Explanation:**
 
@@ -4773,7 +4771,7 @@ app.listen(3000);
 
 ---
 
-**117. How does multi-threading work in Node.js?**
+### **117. How does multi-threading work in Node.js?**
 
 **Explanation:**
 
@@ -4805,7 +4803,7 @@ if (isMainThread) {
 
 ---
 
-**118. What is cryptography and how are web sockets used in Node.js?**
+### **118. What is cryptography and how are web sockets used in Node.js?**
 
 **Explanation:**
 
@@ -4839,7 +4837,7 @@ wss.on('connection', (ws)
 
 ---
 
-**119. What is `express.urlencoded()` and how does it extend URL encoding?**
+### **119. What is `express.urlencoded()` and how does it extend URL encoding?**
 
 **Explanation:**
 
@@ -4871,7 +4869,7 @@ app.listen(3000);
 
 ---
 
-**120. What is EJS?**
+### **120. What is EJS?**
 
 **Explanation:**
 
@@ -4904,7 +4902,7 @@ app.listen(3000);
 
 ---
 
-**121. What is the difference between `cookie-parser` and `body-parser`?**
+### **121. What is the difference between `cookie-parser` and `body-parser`?**
 
 **Explanation:**
 
@@ -4942,7 +4940,7 @@ app.listen(3000);
 
 ---
 
-**122. What are HTTP methods, and what are the differences between POST, GET, PUT, PATCH, and DELETE?**
+### ### **122. What are HTTP methods, and what are the differences between POST, GET, PUT, PATCH, and DELETE?**
 
 **Explanation:**
 
@@ -4980,7 +4978,7 @@ app.listen(3000);
 
 ---
 
-**123. What is `env` and what does the `config()` method do?**
+### ### **123. What is `env` and what does the `config()` method do?**
 
 **Explanation:**
 
@@ -5007,7 +5005,7 @@ console.log(process.env.DATABASE_URL); // Outputs the database URL from .env fil
 
 ---
 
-**124. What is a Bearer Token?**
+### **124. What is a Bearer Token?**
 
 **Explanation:**
 
@@ -5038,7 +5036,7 @@ fetch("https://api.example.com/data", {
 
 ---
 
-**125. What is Node.js and how does it work on the backend?**
+### **125. What is Node.js and how does it work on the backend?**
 
 **Explanation:**
 
@@ -5069,43 +5067,139 @@ server.listen(3000, "127.0.0.1", () => {
 
 ---
 
-**126. What are the phases of a payment process, and how can payment integration be achieved using Razorpay?**
+### **126. What are the phases of a payment process, and how can payment integration be achieved using Razorpay?**
+
+---
+
+**Phases of a Payment Process:**
+
+1. **Initiation:**
+
+   - **Description:** The customer selects items or services and initiates the checkout process on a website or app.
+   - **Activities:** Adding items to the cart, proceeding to checkout, and entering payment information.
+
+2. **Authorization:**
+
+   - **Description:** The payment gateway verifies the payment details provided by the customer.
+   - **Activities:** The payment information is submitted to the payment gateway, which checks if the payment method (e.g., credit card) is valid and if the customer has sufficient funds.
+
+3. **Processing:**
+
+   - **Description:** The payment gateway processes the transaction request.
+   - **Activities:** The payment gateway communicates with the customer’s bank or financial institution to transfer funds.
+
+4. **Settlement:**
+
+   - **Description:** Funds are transferred from the customer’s account to the merchant’s account.
+   - **Activities:** After successful processing, the amount is deducted from the customer’s account and credited to the merchant’s account.
+
+5. **Confirmation:**
+   - **Description:** Both the customer and the merchant receive a notification of the transaction outcome.
+   - **Activities:** Confirmation messages or receipts are sent to both parties, indicating whether the payment was successful or failed.
+
+---
+
+**Payment Integration Using Razorpay:**
+
+**1. Setup:**
+
+- **Create Razorpay Account:** Sign up at [Razorpay](https://razorpay.com) and get your API keys.
+- **Obtain API Keys:** Get your `key_id` and `key_secret` from the Razorpay dashboard.
+
+**2. Integrate Razorpay in Your Web Application:**
+
+- **Include Razorpay Library:** Use Razorpay’s SDK to integrate payment functionality into your web application.
+
+**Example Integration in a Node.js Web Application:**
+
+1. **Install Razorpay SDK:**
+
+   ```bash
+   npm install razorpay
+   ```
+
+2. **Backend Integration:**
+
+   - **Create Order:**
+
+     ```javascript
+     const Razorpay = require("razorpay");
+     const express = require("express");
+     const app = express();
+     const bodyParser = require("body-parser");
+
+     app.use(bodyParser.json());
+
+     const razorpay = new Razorpay({
+       key_id: "YOUR_KEY_ID",
+       key_secret: "YOUR_KEY_SECRET",
+     });
+
+     app.post("/create-order", async (req, res) => {
+       try {
+         const order = await razorpay.orders.create({
+           amount: 50000, // Amount in paise (50000 paise = 500 INR)
+           currency: "INR",
+           payment_capture: 1,
+         });
+         res.json(order);
+       } catch (error) {
+         res.status(500).send(error);
+       }
+     });
+
+     app.listen(3000, () => console.log("Server running on port 3000"));
+     ```
+
+3. **Frontend Integration:**
+
+   - **Include Razorpay Checkout Script:**
+
+     ```html
+     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+     ```
+
+   - **Create Checkout Form:**
+
+     ```html
+     <button id="rzp-button">Pay</button>
+
+     <script>
+       document.getElementById("rzp-button").onclick = function (e) {
+         e.preventDefault();
+         fetch("/create-order", {
+           method: "POST",
+         })
+           .then((response) => response.json())
+           .then((order) => {
+             var options = {
+               key: "YOUR_KEY_ID",
+               amount: order.amount,
+               currency: order.currency,
+               name: "Merchant Name",
+               description: "Test Transaction",
+               order_id: order.id,
+               handler: function (response) {
+                 alert("Payment successful");
+               },
+               prefill: {
+                 name: "Customer Name",
+                 email: "customer@example.com",
+                 contact: "9876543210",
+               },
+             };
+             var paymentObject = new Razorpay(options);
+             paymentObject.open();
+           });
+       };
+     </script>
+     ```
 
 **Explanation:**
 
-**Payment Process Phases:**
+- **Backend Integration:** Create an order with Razorpay and handle the order creation on the server. The server generates an order ID and sends it to the frontend.
+- **Frontend Integration:** Use Razorpay’s checkout script to initiate the payment process. The script takes care of securely handling payment details and displaying the payment UI.
 
-1. **Initiation:** Customer selects items and proceeds to checkout.
-2. **Authorization:** Payment information is submitted and verified.
-3. **Processing:** The payment gateway processes the transaction.
-4. **Settlement:** Funds are transferred to the merchant’s account.
-5. **Confirmation:** Customer and merchant receive payment confirmation.
-
-**Razorpay Integration:**
-
-- **Setup:** Create a Razorpay account and obtain API keys.
-- **Integration:** Use Razorpay’s SDK or API to handle payments in your application.
-
-**Usage Example:**
-
-```javascript
-const Razorpay = require("razorpay");
-const instance = new Razorpay({
-  key_id: "YOUR_KEY_ID",
-  key_secret: "YOUR_KEY_SECRET",
-});
-
-const order = await instance.orders.create({
-  amount: 50000, // Amount in paise
-  currency: "INR",
-  payment_capture: 1,
-});
-
-console.log(order);
-```
-
-**Explanation:**
-
-- **Payment process** involves various stages from initiation to confirmation, and **Razorpay** provides a robust API for integrating payment processing into applications, facilitating secure transactions and easy setup.
+- **Confirmation:** Razorpay provides callbacks to handle success and failure scenarios, ensuring you can manage the payment process accordingly.
 
 ---
