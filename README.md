@@ -2619,28 +2619,97 @@ User.aggregate([
 
 ---
 
-### \*\*68. What is
+### **68. What is Hoisting in js?**
 
-`const` and its usage in JavaScript?\*\*
+In JavaScript, **hoisting** refers to the process by which the JavaScript engine moves declarations (variables and functions) to the top of their respective scopes before execution. This means that you can use variables and functions **before** they are actually declared in the code.
 
-**Explanation:**
+### How Hoisting Works:
 
-**`const`** is a keyword used to declare variables whose values cannot be reassigned.
+- **Variable and function declarations** are moved to the top of their scope (global or function scope).
+- Only **declarations** are hoisted, not the initializations (i.e., assignments of values).
 
-- **Usage:**
-  - **Constant Values:** For values that should not change, such as configuration settings or fixed data.
-  - **Block Scope:** Variables declared with `const` are block-scoped and cannot be redeclared within the same block.
+### Hoisting with Variables
 
-**Usage Example:**
+In the case of variables, only the **declaration** is hoisted, but not the initialization.
+
+#### Example 1: Hoisting with `var`
 
 ```javascript
-const PI = 3.14;
-PI = 3.1415; // Error: Assignment to constant variable
+console.log(x); // undefined
+var x = 5;
+console.log(x); // 5
 ```
 
-**Explanation:**
+In the code above:
 
-- **`const`** provides a way to create immutable variables, enhancing code reliability and preventing accidental changes to critical values.
+1. JavaScript hoists the **declaration** of `x`, so it treats the code as:
+   ```javascript
+   var x;
+   console.log(x); // undefined
+   x = 5;
+   console.log(x); // 5
+   ```
+   Even though `x` is used before it’s declared, the declaration is hoisted, but its assignment (`x = 5`) is not. Therefore, `x` is `undefined` until the line `x = 5` is executed.
+
+#### Example 2: Hoisting with `let` and `const`
+
+Variables declared with `let` and `const` are also hoisted, but they are not initialized until their definition is reached in the code. If you try to access them before the declaration, it results in a **ReferenceError** because they are in the **temporal dead zone**.
+
+```javascript
+console.log(y); // ReferenceError: Cannot access 'y' before initialization
+let y = 10;
+```
+
+In this case, the declaration is hoisted, but since `y` is not initialized yet, you get a reference error when trying to access it before its initialization.
+
+### Hoisting with Functions
+
+Yes, **hoisting also works for functions**, but there’s an important distinction between **function declarations** and **function expressions**.
+
+#### 1. **Function Declarations**
+
+Function declarations are **completely hoisted**, meaning both the function’s definition and declaration are moved to the top of their scope. You can call a function even before it is defined in the code.
+
+##### Example of Function Declaration Hoisting:
+
+```javascript
+foo(); // "Hello, World!"
+
+function foo() {
+  console.log("Hello, World!");
+}
+```
+
+This works because function declarations are fully hoisted, and the code is treated as if the function declaration was at the top.
+
+#### 2. **Function Expressions**
+
+In the case of function expressions (when a function is assigned to a variable), only the variable declaration is hoisted, not the function definition. If you try to invoke the function before the expression is defined, you'll get an error.
+
+##### Example of Function Expression:
+
+```javascript
+bar(); // TypeError: bar is not a function
+
+var bar = function () {
+  console.log("This is a function expression.");
+};
+```
+
+Here’s what happens:
+
+1. The variable `bar` is hoisted, but it’s initialized to `undefined`.
+2. Trying to invoke `bar()` before the assignment results in `TypeError` because `bar` is `undefined` at the time of the call.
+
+### Summary
+
+- **Hoisting** is the behavior in JavaScript where variable and function declarations are moved to the top of their scope before code execution.
+- **Variables declared with `var`** are hoisted, but only their declaration (not their assignment), and they are initialized with `undefined`.
+- **Variables declared with `let` and `const`** are hoisted but exist in a temporal dead zone until they are initialized.
+- **Function declarations** are fully hoisted, meaning you can call them before their definition.
+- **Function expressions** (when assigned to a variable) only have the variable declaration hoisted, not the function definition.
+
+This difference is crucial when determining where and when you can use a function in your code.
 
 ---
 
@@ -2725,37 +2794,74 @@ app.use("/api/v2/resource", v2ResourceRouter);
 
 ---
 
-### **72. How do promises work in JavaScript?**
+### **72. What is Temporal Dead Zone(TDZ) in JavaScript?**
 
 **Explanation:**
 
-**Promises** are objects representing the eventual completion (or failure) of an asynchronous operation.
+The **Temporal Dead Zone (TDZ)** in JavaScript refers to the period between the entering of a scope (like a block or function) and the point where a variable declared with `let` or `const` is initialized. During this period, the variable exists but cannot be accessed, and attempting to do so will result in a **ReferenceError**.
 
-- **States:**
+### Key Points about the Temporal Dead Zone:
 
-  - **Pending:** Initial state, neither fulfilled nor rejected.
-  - **Fulfilled:** The operation completed successfully.
-  - **Rejected:** The operation failed.
+1. **TDZ starts at the beginning of the scope** where the variable is declared (e.g., a function or block).
+2. The variable is in the TDZ until the code execution reaches the line where the variable is declared and initialized.
+3. Any attempt to access the variable before its declaration and initialization will throw a **ReferenceError**.
+4. Once the declaration is encountered, the variable is no longer in the TDZ and can be used.
 
-- **Usage:**
-  - **`then()`:** Adds callbacks for when the promise is fulfilled or rejected.
-  - **`catch()`:** Adds a callback for handling errors.
-
-**Usage Example:**
+### Example of the Temporal Dead Zone
 
 ```javascript
-const promise = new Promise((resolve, reject) => {
-  setTimeout(() => resolve("Success!"), 1000);
-});
-
-promise
-  .then((result) => console.log(result))
-  .catch((error) => console.error(error));
+{
+  console.log(x); // ReferenceError: Cannot access 'x' before initialization
+  let x = 10;
+  console.log(x); // 10
+}
 ```
 
-**Explanation:**
+- The variable `x` is in the TDZ from the start of the block until its declaration (`let x = 10;`).
+- Accessing `x` before this declaration causes a **ReferenceError** because it is in the TDZ.
+- After the line `let x = 10;` executes, the variable is initialized and can be accessed normally.
 
-- **Promises** simplify handling asynchronous operations by providing a way to chain callbacks and manage errors effectively.
+### Temporal Dead Zone with `const`
+
+The TDZ also applies to variables declared with `const`. The key difference is that variables declared with `const` must be initialized at the time of declaration, so the TDZ lasts until the point where the variable is declared and initialized.
+
+```javascript
+{
+  console.log(y); // ReferenceError: Cannot access 'y' before initialization
+  const y = 5;
+  console.log(y); // 5
+}
+```
+
+- The variable `y` is in the TDZ until the `const y = 5;` declaration and initialization.
+- After that, it can be used normally.
+
+### Why the Temporal Dead Zone Exists
+
+The TDZ exists because of how `let` and `const` are designed to work differently from `var`. Unlike `var`, which hoists the variable declaration and initializes it with `undefined`, `let` and `const` are not initialized until the actual line of code where they are defined. This design helps prevent bugs caused by accessing variables before they are meaningfully initialized.
+
+### Key Differences Between `var`, `let`, and `const` Regarding Hoisting and TDZ
+
+- **`var`:** Variables declared with `var` are hoisted and initialized with `undefined`. This allows them to be accessed before their declaration, though they won't have a value until they're assigned one. No TDZ exists for `var`.
+
+  ```javascript
+  console.log(a); // undefined
+  var a = 3;
+  console.log(a); // 3
+  ```
+
+- **`let` and `const`:** Variables declared with `let` and `const` are hoisted but not initialized until the point of declaration, meaning they are in the TDZ and cannot be accessed before their declaration. If you try to access them before that point, a **ReferenceError** occurs.
+  ```javascript
+  console.log(b); // ReferenceError: Cannot access 'b' before initialization
+  let b = 3;
+  console.log(b); // 3
+  ```
+
+### Summary
+
+- The **Temporal Dead Zone (TDZ)** is the time period between entering a scope and initializing a variable with `let` or `const`.
+- Variables in the TDZ cannot be accessed and trying to do so will throw a **ReferenceError**.
+- The TDZ prevents usage of uninitialized variables and helps ensure safer code execution by enforcing proper initialization before usage.
 
 ---
 
@@ -2815,49 +2921,273 @@ console.log(b); // Outputs: undefined
 
 ---
 
-### **75. What is the difference between `==` and `===` in JavaScript?**
+### **75. What is Cascade rule and !important keyword in css.**
 
 **Explanation:**
+In CSS, the **cascade rule** and the **`!important` keyword** are key concepts that determine how styles are applied to elements when there are conflicting rules. Understanding them helps you resolve style conflicts and apply the desired styling effectively.
 
-- **`==` (Loose Equality):** Compares values for equality after performing type coercion. It converts the operands to the same type before comparison.
+### 1. **Cascade Rule in CSS**
 
-- **`===` (Strict Equality):** Compares values for equality without type coercion. It returns true only if both the value and the type are the same.
+The **cascade rule** in CSS refers to the way styles are applied when multiple CSS rules target the same HTML element. The term "cascade" describes the process of choosing which rule wins when multiple conflicting rules are applied to an element.
 
-**Usage Example:**
+CSS follows three main factors to determine the style priority:
 
-```javascript
-console.log(5 == "5"); // Outputs: true (type coercion occurs)
-console.log(5 === "5"); // Outputs: false (different types)
+#### A. **Source Order (Last Rule Wins)**
+
+If two or more rules have the same specificity and importance, the **last rule** written in the code will be applied. This is because CSS reads from top to bottom and the last rule "wins."
+
+```html
+<style>
+  p {
+    color: red;
+  }
+  p {
+    color: blue;
+  }
+</style>
+
+<p>This paragraph will be blue.</p>
 ```
 
-**Explanation:**
+In this case, both rules have the same specificity, but the second rule (color: blue) is applied because it's written last.
 
-- **`==`** allows type coercion, which can lead to unexpected results, while **`===`** ensures that both value and type are considered in comparisons, leading to more predictable and reliable code.
+#### B. **Specificity**
+
+Specificity determines which rule is stronger based on how the selectors are written. The more specific a selector is, the higher its precedence.
+
+- **Element selectors** (e.g., `p`, `div`) have the lowest specificity.
+- **Class selectors** (e.g., `.class-name`) have higher specificity than elements.
+- **ID selectors** (e.g., `#id-name`) have the highest specificity among the three.
+
+```html
+<style>
+  p {
+    color: red; /* Lowest specificity */
+  }
+  .my-class {
+    color: blue; /* Higher specificity */
+  }
+  #my-id {
+    color: green; /* Highest specificity */
+  }
+</style>
+
+<p id="my-id" class="my-class">This paragraph will be green.</p>
+```
+
+Here, the `#my-id` selector is the most specific, so its style (green) is applied to the paragraph, even though there are conflicting styles.
+
+#### C. **Inline Styles**
+
+Styles written directly in the HTML element using the `style` attribute always have higher specificity than styles in the CSS file.
+
+```html
+<p id="my-id" style="color: orange;">This paragraph will be orange.</p>
+```
+
+In this case, even though the `#my-id` selector has high specificity, the inline style (`style="color: orange;"`) wins because it’s the most specific.
+
+#### Order of Precedence in CSS:
+
+1. **Inline styles** (highest priority)
+2. **ID selectors**
+3. **Class, attribute, and pseudo-class selectors**
+4. **Element and pseudo-element selectors** (lowest priority)
+5. **Universal selector (`*`) and inherited styles**
+
+### 2. **The `!important` Keyword**
+
+The `!important` keyword is used to **override** the normal specificity rules in CSS. When `!important` is added to a CSS declaration, that style will take precedence over all others, regardless of specificity or the order of the rules.
+
+#### Example of `!important` Usage:
+
+```html
+<style>
+  p {
+    color: red !important;
+  }
+  #my-id {
+    color: blue;
+  }
+</style>
+
+<p id="my-id">This paragraph will be red.</p>
+```
+
+- Even though the `#my-id` selector is more specific, the `!important` keyword applied to `color: red` makes it win, and the paragraph will be red.
+
+### Key Points about `!important`:
+
+- **Overrides specificity**: `!important` will override all other rules, regardless of their specificity or order.
+- **Source order still matters** when multiple `!important` rules are present. The last `!important` rule will win if more than one rule applies to the same property.
+
+```html
+<style>
+  p {
+    color: red !important;
+  }
+  #my-id {
+    color: blue !important;
+  }
+</style>
+
+<p id="my-id">This paragraph will be blue.</p>
+```
+
+Here, both rules have `!important`, but the rule for `#my-id` comes later, so the paragraph will be blue.
+
+#### Proper Usage of `!important`
+
+- Use `!important` sparingly. Overusing it can make your CSS hard to maintain because it overrides the natural flow of specificity and makes future debugging difficult.
+- It's often a good idea to refactor CSS rather than rely on `!important`. Use it as a last resort when other methods fail.
+
+### Summary
+
+- **Cascade Rule**: CSS applies styles based on **specificity**, **source order**, and the **origin** of the styles. More specific rules or those defined later override others.
+- **`!important` Keyword**: This forces a rule to override all others, even those with higher specificity or inline styles, except other `!important` rules, where the last one takes precedence.
+
+Understanding these concepts will help you manage CSS conflicts more effectively and ensure that the right styles are applied where needed.
 
 ---
 
-### **76. How does the `fetch` API work in JavaScript?**
+### **76. What is mutation observer in JavaScript?**
 
-**Explanation:**
+**Mutation Observers** in JavaScript provide a way to monitor changes in the DOM (Document Object Model) and react to them in real-time. A **MutationObserver** allows developers to observe changes to elements like adding or removing child nodes, attribute changes, or text content changes. This is particularly useful when working with dynamic web applications where the DOM is frequently updated.
 
-The **`fetch` API** is used to make network requests in JavaScript, providing a more modern and flexible alternative to `XMLHttpRequest`.
+### Key Features of Mutation Observers:
 
-- **Usage:**
-  - **Making Requests:** `fetch()` returns a promise that resolves to the response of the request.
-  - **Handling Responses:** You can use `.then()` to handle the response and parse it as needed.
+- **Efficient DOM monitoring**: Mutation observers are more efficient than traditional DOM events like `DOMSubtreeModified` and `DOMNodeInserted`, which are considered deprecated.
+- **Asynchronous execution**: Mutation observers run asynchronously, meaning the callback function is executed after all the current tasks and microtasks (like promises) have been completed.
+- **Fine control**: You can specify exactly what types of mutations to observe, such as changes to child elements, attributes, or text content.
 
-**Usage Example:**
+### Basic Syntax
+
+The `MutationObserver` API has two primary components:
+
+1. **Creating an observer**: You create a mutation observer object using the `MutationObserver` constructor and pass a callback function that will be triggered when mutations occur.
+2. **Observing changes**: You use the `.observe()` method to start observing a specific DOM node for the specified mutations.
+
+### Example of MutationObserver:
 
 ```javascript
-fetch("https://api.example.com/data")
-  .then((response) => response.json())
-  .then((data) => console.log(data))
-  .catch((error) => console.error("Error:", error));
+// Define a callback function that is executed when mutations are observed
+const observerCallback = function (mutationsList, observer) {
+  // Loop through all the mutations
+  mutationsList.forEach((mutation) => {
+    console.log(mutation.type); // Logs the type of mutation
+    if (mutation.type === "childList") {
+      console.log("Child nodes changed.");
+    } else if (mutation.type === "attributes") {
+      console.log("Attributes changed: ", mutation.attributeName);
+    }
+  });
+};
+
+// Create a new MutationObserver and pass the callback function
+const observer = new MutationObserver(observerCallback);
+
+// Target DOM node to observe
+const targetNode = document.getElementById("my-element");
+
+// Configuration object to specify what changes to observe
+const config = {
+  childList: true, // Observe addition or removal of child nodes
+  attributes: true, // Observe attribute changes
+  subtree: true, // Observe changes to all descendants of the target
+};
+
+// Start observing the target node
+observer.observe(targetNode, config);
+
+// Example mutation: Add a new child element
+const newElement = document.createElement("p");
+newElement.textContent = "I am a new element!";
+targetNode.appendChild(newElement);
 ```
 
-**Explanation:**
+### Breakdown of the Example:
 
-- **`fetch`** simplifies network requests by providing a promise-based interface and allowing easy handling of responses and errors.
+1. **Callback function**: The `observerCallback` function will be called whenever a mutation (such as adding a child or changing an attribute) is detected. It receives two parameters:
+
+   - **mutationsList**: An array of `MutationRecord` objects, each representing a mutation.
+   - **observer**: The `MutationObserver` instance observing the DOM.
+
+2. **Creating an observer**: The `MutationObserver()` constructor takes the callback function as an argument.
+
+3. **Start observing**: The `.observe()` method starts observing the target DOM node (`targetNode` in this case) for the specified changes, defined in the `config` object.
+
+4. **Mutation example**: In this example, a new `<p>` element is appended to `targetNode`, which triggers the mutation observer callback.
+
+### Types of Mutations that Can Be Observed
+
+You can configure a `MutationObserver` to monitor different types of DOM mutations:
+
+1. **`childList`**: Detects when child nodes (elements or text) are added or removed.
+2. **`attributes`**: Detects when attributes of an element are modified.
+3. **`subtree`**: Detects changes not only in the target element but also in its child elements.
+4. **`characterData`**: Detects changes to the text content of the observed node.
+
+### MutationObserver Options (Config Object)
+
+The config object passed to `.observe()` can include the following options:
+
+- **`childList`**: Set to `true` to observe additions or removals of child nodes.
+- **`attributes`**: Set to `true` to observe changes to the attributes of the observed node.
+- **`subtree`**: Set to `true` to observe changes to the target node and all of its descendants.
+- **`characterData`**: Set to `true` to observe changes to the node’s text content.
+- **`attributeFilter`**: An array of attribute names to observe for changes. If omitted, all attributes are observed.
+- **`attributeOldValue`**: Set to `true` to record the previous value of attributes.
+- **`characterDataOldValue`**: Set to `true` to record the previous value of text content.
+
+### Example: Observing Attribute Changes
+
+```javascript
+const targetNode = document.getElementById("my-element");
+
+const observer = new MutationObserver((mutationsList) => {
+  mutationsList.forEach((mutation) => {
+    if (mutation.type === "attributes") {
+      console.log(`Attribute "${mutation.attributeName}" was modified.`);
+    }
+  });
+});
+
+const config = { attributes: true };
+
+observer.observe(targetNode, config);
+
+// Example: Changing an attribute
+targetNode.setAttribute("class", "new-class");
+```
+
+This will log the change whenever the `class` attribute of `targetNode` is modified.
+
+### Stopping the Observer
+
+To stop observing mutations, you can call the `disconnect()` method on the observer:
+
+```javascript
+observer.disconnect();
+```
+
+### Real-World Use Cases for Mutation Observers
+
+- **Dynamic content loading**: Detect when new content is added to the DOM (e.g., infinite scrolling or dynamically loaded content).
+- **Form validation**: Observe changes to form elements to validate input fields dynamically.
+- **UI interactions**: Track changes in a specific part of the UI to trigger actions (e.g., hide/show elements, modify layout).
+- **Custom components**: Build custom components or frameworks that respond to DOM updates.
+
+### Limitations
+
+- Mutation observers are **asynchronous** and can be **performance-intensive** if used excessively, especially with large DOM trees.
+- They do not capture changes made to non-DOM-related actions, such as CSS properties, unless those changes affect the attributes of elements.
+
+### Summary
+
+- **Mutation Observers** are used to track changes to the DOM in an efficient way.
+- They can observe a wide variety of mutations, including changes to child nodes, attributes, and text content.
+- They are highly customizable through the configuration options and can be used for various tasks like dynamic content handling or DOM manipulation monitoring.
+- Unlike older DOM mutation events, Mutation Observers are modern and performant.
 
 ---
 
@@ -2916,62 +3246,207 @@ document.getElementById("parent").addEventListener("click", function (event) {
 
 ---
 
-### **79. What are the differences between `localStorage` and `sessionStorage`?**
+### **79. Difference between Object bracket notation and dot notation**
 
-**Explanation:**
+In JavaScript, objects can be accessed and manipulated using two different syntaxes: **dot notation** and **bracket notation**. Both are used to access or set properties on an object, but they differ in flexibility and usage scenarios.
 
-- **`localStorage`:** Stores data with no expiration time
+### 1. **Dot Notation**
 
-. Data persists even after the browser is closed and reopened.
+Dot notation is the simpler and more commonly used way to access properties in an object. It uses a dot (`.`) followed by the property name.
 
-- **`sessionStorage`:** Stores data for the duration of the page session. Data is cleared when the page session ends (e.g., when the tab or browser is closed).
-
-**Usage Example:**
+#### Syntax:
 
 ```javascript
-// localStorage
-localStorage.setItem("key", "value");
-console.log(localStorage.getItem("key")); // Outputs: value
-
-// sessionStorage
-sessionStorage.setItem("key", "value");
-console.log(sessionStorage.getItem("key")); // Outputs: value
+object.property;
 ```
 
-**Explanation:**
+#### Example:
 
-- **`localStorage`** is used for long-term storage, while **`sessionStorage`** is for temporary storage that is cleared with the session.
+```javascript
+const person = {
+  name: "John",
+  age: 30,
+};
+
+console.log(person.name); // "John"
+person.age = 31;
+console.log(person.age); // 31
+```
+
+### Rules and Limitations of Dot Notation:
+
+- **Property names must be valid JavaScript identifiers** (i.e., no spaces, special characters, or starting with a number). For example:
+
+  ```javascript
+  const obj = { "first name": "John" };
+  console.log(obj.first name); // SyntaxError
+  ```
+
+- **The property name must be known and fixed** at the time of coding. You cannot dynamically access a property name with a variable using dot notation.
+  ```javascript
+  const propertyName = "name";
+  console.log(person.propertyName); // undefined
+  ```
+
+### 2. **Bracket Notation**
+
+Bracket notation allows you to access properties using **string keys**. It is more flexible because you can dynamically determine the property name at runtime.
+
+#### Syntax:
+
+```javascript
+object["property"];
+```
+
+#### Example:
+
+```javascript
+const person = {
+  name: "John",
+  age: 30,
+};
+
+console.log(person["name"]); // "John"
+person["age"] = 31;
+console.log(person["age"]); // 31
+```
+
+### Flexibility of Bracket Notation:
+
+- **Dynamic property access**: You can use variables or expressions inside the brackets to access a property dynamically.
+
+  ```javascript
+  const key = "name";
+  console.log(person[key]); // "John"
+  ```
+
+- **Property names with spaces or special characters**: If a property has spaces, special characters, or numbers at the beginning, you must use bracket notation.
+
+  ```javascript
+  const obj = {
+    "first name": "John",
+    "@age": 30,
+    "123status": "active",
+  };
+
+  console.log(obj["first name"]); // "John"
+  console.log(obj["@age"]); // 30
+  console.log(obj["123status"]); // "active"
+  ```
+
+### Key Differences
+
+| Aspect             | Dot Notation                                                                       | Bracket Notation                                                     |
+| ------------------ | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **Syntax**         | `object.property`                                                                  | `object["property"]`                                                 |
+| **Property Names** | Must be valid identifiers (no spaces, special characters, or numbers at the start) | Can be any string, including those with spaces or special characters |
+| **Dynamic Access** | Cannot dynamically access properties                                               | Can dynamically access properties using variables or expressions     |
+| **Readability**    | More concise and readable                                                          | Slightly more verbose but more flexible                              |
+| **When to Use**    | When property names are known and simple                                           | When property names are dynamic or contain special characters        |
+
+### Example: Dynamic Property Access
+
+If you need to access properties dynamically using a variable, bracket notation is required:
+
+```javascript
+const property = "name";
+console.log(person[property]); // "John"
+```
+
+Dot notation would not work in this case:
+
+```javascript
+console.log(person.property); // undefined
+```
+
+### Example: Accessing Properties with Special Characters or Spaces
+
+```javascript
+const obj = {
+  "first name": "Alice",
+  "favorite-color": "blue"
+};
+
+// Bracket notation
+console.log(obj["first name"]); // "Alice"
+console.log(obj["favorite-color"]); // "blue"
+
+// Dot notation would throw an error or not work correctly
+console.log(obj.first name); // SyntaxError
+console.log(obj.favorite-color); // ReferenceError
+```
+
+### Summary:
+
+- **Dot notation** is simpler and preferred when property names are valid identifiers.
+- **Bracket notation** is more flexible, allowing dynamic access and handling of property names with spaces, special characters, or numbers.
 
 ---
 
-### **80. How do async/await work in JavaScript?**
+### **80. What is Callback hell in Js ?**
 
-**Explanation:**
+Got it! Let’s break down **callback hell** in a concise but detailed way.
 
-**`async/await`** are used for handling asynchronous operations in a more readable and synchronous-like manner.
+### What is Callback Hell?
 
-- **`async` Function:** Declares a function as asynchronous, allowing the use of `await` inside it.
-- **`await` Expression:** Pauses the execution of the `async` function until the promise is resolved.
+Callback hell occurs when multiple asynchronous operations are nested inside each other using callbacks, leading to deeply indented and hard-to-read code, often called the **"Pyramid of Doom"**.
 
-**Usage Example:**
+### Why it Happens:
+
+In JavaScript, many operations like fetching data from an API or reading files are asynchronous. When you chain these operations with callbacks (functions executed after the asynchronous task completes), the nesting can get out of hand.
+
+### Example of Callback Hell:
 
 ```javascript
-async function fetchData() {
-  try {
-    const response = await fetch("https://api.example.com/data");
-    const data = await response.json();
-    console.log(data);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-fetchData();
+asyncOperation1(function (result1) {
+  asyncOperation2(result1, function (result2) {
+    asyncOperation3(result2, function (result3) {
+      asyncOperation4(result3, function (result4) {
+        // Final operation
+      });
+    });
+  });
+});
 ```
 
-**Explanation:**
+This code quickly becomes difficult to understand and maintain, especially with error handling or more logic added inside each callback.
 
-- **`async/await`** simplifies handling asynchronous code, making it easier to read and maintain compared to traditional promise chaining.
+### Problems with Callback Hell:
+
+1. **Hard to read**: Deep nesting makes the code complex.
+2. **Difficult to maintain**: Modifying such code requires careful attention to every level.
+3. **Error handling is complex**: Handling errors for each nested callback becomes tricky.
+
+### Solutions to Avoid Callback Hell:
+
+1. **Promises**: Promises flatten the structure, improving readability.
+
+   ```javascript
+   asyncOperation1()
+     .then((result1) => asyncOperation2(result1))
+     .then((result2) => asyncOperation3(result2))
+     .then((result3) => asyncOperation4(result3))
+     .catch((error) => console.error(error));
+   ```
+
+2. **`async`/`await`**: Even simpler, making asynchronous code look synchronous.
+   ```javascript
+   async function runOperations() {
+     try {
+       const result1 = await asyncOperation1();
+       const result2 = await asyncOperation2(result1);
+       const result3 = await asyncOperation3(result2);
+       await asyncOperation4(result3);
+     } catch (error) {
+       console.error(error);
+     }
+   }
+   ```
+
+### Summary:
+
+- **Callback hell** happens when asynchronous callbacks are deeply nested, leading to unreadable and hard-to-maintain code.
+- **Promises** and **`async`/`await`** are modern solutions that help avoid callback hell by making asynchronous code easier to manage and read.
 
 ---
 
@@ -3125,30 +3600,56 @@ console.log(even); // Outputs: [2]
 
 **Explanation:**
 
-**`async` and `await`** are used for handling asynchronous operations more intuitively and synchronously.
+Absolutely! Here's a clear and concise explanation:
 
-- **`async` Function:** Declares a function as asynchronous, enabling the use of `await` within it.
-- **`await` Expression:** Pauses the execution of the `async` function until the promise is resolved.
+### **`setTimeout` vs. `setInterval`**
 
-**Usage Example:**
+- **`setTimeout`**:
 
-```javascript
-async function fetchData() {
-  try {
-    const response = await fetch("https://api.example.com/data");
-    const data = await response.json();
-    console.log(data);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
+  - **Function**: Executes a function **once** after a specified delay.
+  - **Usage**:
+    ```javascript
+    setTimeout(() => {
+      console.log("Executed after 2 seconds");
+    }, 2000);
+    ```
 
-fetchData();
-```
+- **`setInterval`**:
+  - **Function**: Repeatedly executes a function every specified interval.
+  - **Usage**:
+    ```javascript
+    setInterval(() => {
+      console.log("Executed every 2 seconds");
+    }, 2000);
+    ```
 
-**Explanation:**
+### **`clearTimeout` vs. `clearInterval`**
 
-- **`async` and `await`** simplify the process of working with asynchronous operations, making the code more readable and easier to manage compared to traditional promise chaining.
+- **`clearTimeout`**:
+
+  - **Function**: Cancels a timeout created with `setTimeout`.
+  - **Usage**:
+    ```javascript
+    const timeoutID = setTimeout(() => {
+      /* ... */
+    }, 2000);
+    clearTimeout(timeoutID); // Cancels the timeout
+    ```
+
+- **`clearInterval`**:
+  - **Function**: Stops an interval created with `setInterval`.
+  - **Usage**:
+    ```javascript
+    const intervalID = setInterval(() => {
+      /* ... */
+    }, 2000);
+    clearInterval(intervalID); // Stops the interval
+    ```
+
+### Summary:
+
+- **`setTimeout`** runs code once after a delay; **`setInterval`** runs code repeatedly at intervals.
+- **`clearTimeout`** stops a scheduled single execution; **`clearInterval`** stops ongoing repeated executions.
 
 ---
 
@@ -3205,66 +3706,144 @@ console.log(localStorage.getItem("key")); // Outputs: value
 
 ---
 
-### **89. What are some common methods for handling asynchronous operations in JavaScript?**
+### **89. what atob() method do in JavaScript?**
 
 **Explanation:**
 
-Common methods for handling asynchronous operations include:
+The `atob` function in JavaScript is used to **decode** a Base64-encoded string back into its original ASCII string format. "Base64" is a binary-to-text encoding scheme that represents binary data in an ASCII string format by translating it into a base64 representation.
 
-- **Callbacks:** Functions passed as arguments to be executed after the asynchronous operation completes.
-- **Promises:** Objects representing the eventual completion or failure of an asynchronous operation.
-- **Async/Await:** Syntax for handling promises in a more synchronous-like manner.
+### **Usage of `atob`**
 
-**Usage Example (Promise):**
+- **Purpose**: Decodes Base64-encoded strings.
+- **Syntax**:
+  ```javascript
+  atob(encodedString);
+  ```
+- **Example**:
+
+  ```javascript
+  // Base64-encoded string (for "Hello, World!")
+  const encoded = "SGVsbG8sIFdvcmxkIQ==";
+
+  // Decoding it
+  const decoded = atob(encoded);
+
+  console.log(decoded); // "Hello, World!"
+  ```
+
+### Key Points:
+
+- **Input**: The input to `atob` must be a valid Base64-encoded string.
+- **Output**: It returns a string decoded from Base64. The resulting string is in the same format as the original string before encoding.
+
+### Note:
+
+- `atob` works with **ASCII** strings. If you need to handle binary data or Unicode strings, you might need additional encoding/decoding steps.
+- For more complex cases involving non-ASCII characters, you might use `TextEncoder` and `TextDecoder` for better support.
 
 ```javascript
-const promise = new Promise((resolve, reject) => {
-  setTimeout(() => resolve("Success!"), 1000);
-});
-promise.then((result) => console.log(result));
+// Example with UTF-8 encoded Base64 string
+const encodedUTF8 = "5L2g5aW977yM5LiW55WM"; // Base64 for "Hello world"
+const decodedUTF8 = atob(encodedUTF8);
+
+console.log(decodedUTF8); // "Hello world"
 ```
 
-**Usage Example (Async/Await):**
+### Summary:
 
-```javascript
-async function fetchData() {
-  const response = await fetch("https://api.example.com/data");
-  const data = await response.json();
-  console.log(data);
-}
-fetchData();
-```
-
-**Explanation:**
-
-- **Callbacks**, **promises**, and **async/await** are common methods for managing asynchronous operations, each with its own advantages and use cases.
+- **`atob`** decodes Base64-encoded strings into their original ASCII format. Use it when you need to convert Base64 data back into readable text.
 
 ---
 
-### \*\*90. What is the purpose
+### **90. $group() method in mongoose ?**
 
-of `Object.freeze` in JavaScript?\*\*
+The **`group`** method in Mongoose (and MongoDB) is used to perform aggregation operations that group documents together based on a specific key and apply aggregation functions to the grouped documents. It’s part of MongoDB’s aggregation framework, which provides powerful tools for data processing and analysis.
 
-**Explanation:**
+### **Using `group` in Mongoose**
 
-**`Object.freeze`** is a method used to freeze an object, preventing modifications to its properties and making it immutable.
+**Note**: The `group` method is deprecated and replaced by the aggregation framework's `$group` stage. You should use the `$group` stage in the aggregation pipeline instead. Below is a general explanation of how to use `$group` in Mongoose.
 
-- **Usage:**
-  - **Prevent Modifications:** Prevent changes to existing properties and disallow adding or removing properties.
-  - **Deep Freeze:** For deep immutability, additional recursive freezing is required.
+### **Aggregation Pipeline with `$group`**
 
-**Usage Example:**
+The `$group` stage in an aggregation pipeline allows you to group documents by a specific field and perform various operations on the grouped data, such as counting, summing, or averaging.
+
+#### **Basic Syntax:**
 
 ```javascript
-const obj = { name: "Alice" };
-Object.freeze(obj);
-obj.name = "Bob"; // No effect
-console.log(obj.name); // Outputs: Alice
+Model.aggregate([
+  {
+    $group: {
+      _id: "$fieldName", // Group by this field
+      total: { $sum: 1 }, // Example aggregation operation (count)
+      // other aggregations like $avg, $max, $min, etc.
+    },
+  },
+]);
 ```
 
-**Explanation:**
+### **Example Usage:**
 
-- **`Object.freeze`** ensures that objects cannot be altered, which can be useful for enforcing immutability and preventing unintended changes.
+Assume you have a collection of `orders` and you want to group them by the `status` field and count the number of orders for each status.
+
+#### **Schema Example:**
+
+```javascript
+const orderSchema = new mongoose.Schema({
+  status: String,
+  amount: Number,
+});
+
+const Order = mongoose.model("Order", orderSchema);
+```
+
+#### **Aggregation Query:**
+
+```javascript
+Order.aggregate([
+  {
+    $group: {
+      _id: "$status", // Group by the 'status' field
+      count: { $sum: 1 }, // Count the number of documents in each group
+    },
+  },
+])
+  .then((results) => {
+    console.log(results);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+#### **Output:**
+
+```json
+[
+  { "_id": "pending", "count": 10 },
+  { "_id": "shipped", "count": 20 },
+  { "_id": "delivered", "count": 15 }
+]
+```
+
+### **Explanation:**
+
+1. **`$group`**: Groups the documents by the field specified in `_id`. Here, `"_id": "$status"` means grouping by the `status` field.
+
+2. **Aggregation Operations**:
+   - **`$sum`**: Counts the number of documents in each group. Here, `{ $sum: 1 }` increments the count for each document.
+
+### **Additional Aggregation Operators:**
+
+- **`$avg`**: Computes the average of a numeric field.
+- **`$max`**: Finds the maximum value of a field.
+- **`$min`**: Finds the minimum value of a field.
+- **`$push`**: Creates an array of field values.
+- **`$addToSet`**: Creates an array of unique field values.
+
+### **Summary:**
+
+- **`$group`** in the aggregation pipeline is used to group documents and perform aggregation operations like counting, summing, and averaging.
+- **`$group`** replaces the deprecated `group` method and is a key component of MongoDB’s powerful aggregation framework.
 
 ---
 
@@ -3380,57 +3959,208 @@ const timer = new Timer();
 
 ---
 
-### **95. What is the purpose of `Object.assign` in JavaScript?**
+### **95. exec() method in mongoose.**
 
-**Explanation:**
+The `.exec()` method in Mongoose is used to execute a query and return a promise, which allows for asynchronous handling of the query result. It is commonly used in combination with Mongoose query methods like `.find()`, `.findOne()`, `.findById()`, etc.
 
-**`Object.assign`** is used to copy the values of all enumerable properties from one or more source objects to a target object.
+### **How `.exec()` Works:**
 
-- **Usage:**
-  - **Merge Objects:** Combine multiple objects into one.
-  - **Clone Objects:** Create a shallow copy of an object.
+- **Purpose**: Executes a Mongoose query and returns a promise.
+- **Usage**: It is used when you want to handle the result of a query using `.then()` and `.catch()` for promise chaining, or `async/await` syntax.
 
-**Usage Example:**
+### **Basic Syntax:**
 
 ```javascript
-const target = { a: 1 };
-const source = { b: 2 };
-
-Object.assign(target, source);
-console.log(target); // Outputs: { a: 1, b: 2 }
+Model.find(query)
+  .exec()
+  .then((result) => {
+    // Handle the result
+  })
+  .catch((err) => {
+    // Handle errors
+  });
 ```
 
-**Explanation:**
+### **Example Usage:**
 
-- **`Object.assign`** simplifies object manipulation by providing a straightforward way to copy and merge properties.
+Assuming you have a `User` model and you want to find users with a specific age:
+
+```javascript
+const mongoose = require("mongoose");
+
+// Define a simple User schema
+const userSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+});
+
+const User = mongoose.model("User", userSchema);
+
+// Query to find users with age 30
+User.find({ age: 30 })
+  .exec()
+  .then((users) => {
+    console.log(users); // Array of users with age 30
+  })
+  .catch((err) => {
+    console.error(err); // Handle error
+  });
+```
+
+### **With `async/await`:**
+
+You can also use `.exec()` with `async/await` for cleaner and more readable code:
+
+```javascript
+async function findUsers() {
+  try {
+    const users = await User.find({ age: 30 }).exec();
+    console.log(users); // Array of users with age 30
+  } catch (err) {
+    console.error(err); // Handle error
+  }
+}
+
+findUsers();
+```
+
+### **Key Points:**
+
+- **Promise-Based**: `.exec()` returns a promise, allowing you to use promise methods (`.then()`, `.catch()`) or `async/await`.
+- **Error Handling**: `.exec()` helps in managing errors gracefully using promises.
+- **Separation of Concerns**: Using `.exec()` can help separate query construction from execution, which can be useful for more complex query setups.
+
+### **Summary:**
+
+- **`.exec()`** executes a Mongoose query and returns a promise, making it easy to handle asynchronous operations using promises or `async/await`.
+- It allows for flexible and clean error handling and result management in Mongoose queries.
 
 ---
 
-### **96. What is the purpose of the `bind` method in JavaScript?**
+### **96. How can we schedule any operation in nodejs application, for example we wanted to schedule the account deletion in a web application?**
 
 **Explanation:**
 
-The **`bind`** method creates a new function with a specific `this` value and, optionally, pre-set arguments.
+In Node.js or Express.js, you can schedule operations using several approaches. For scheduling tasks like account deletion, you can use built-in modules, third-party libraries, or task schedulers. Here’s a concise guide on how to do this:
 
-- **Usage:**
-  - **Set `this`:** Bind a specific context to a function.
-  - **Partial Application:** Pre-set arguments for function invocation.
+### **1. Using `setTimeout` and `setInterval`**
 
-**Usage Example:**
+- **`setTimeout`**: Executes a function once after a specified delay.
+- **`setInterval`**: Repeatedly executes a function at specified intervals.
+
+**Example**:
 
 ```javascript
-function greet() {
-  console.log(`Hello, ${this.name}`);
-}
-
-const person = { name: "Alice" };
-const boundGreet = greet.bind(person);
-boundGreet(); // Outputs: Hello, Alice
+// Schedule a task to run once after 24 hours
+const millisecondsInADay = 24 * 60 * 60 * 1000;
+setTimeout(() => {
+  // Your code to delete the account
+  console.log("Account deletion executed");
+}, millisecondsInADay);
 ```
 
-**Explanation:**
+**Limitations**:
 
-- **`bind`** provides control over the `this` context and function arguments, making it useful for customizing function behavior and context.
+- Not suitable for long-term or recurring tasks as the Node.js process needs to be running continuously.
+
+### **2. Using Third-Party Libraries**
+
+**a. `node-cron`**
+
+`node-cron` is a popular library for scheduling tasks using cron syntax.
+
+- **Installation**:
+
+  ```bash
+  npm install node-cron
+  ```
+
+- **Usage**:
+
+  ```javascript
+  const cron = require("node-cron");
+
+  // Schedule a task to run daily at midnight
+  cron.schedule("0 0 * * *", () => {
+    // Your code to delete accounts
+    console.log("Scheduled account deletion executed");
+  });
+  ```
+
+**b. `agenda`**
+
+`agenda` is a more robust task scheduler for Node.js.
+
+- **Installation**:
+
+  ```bash
+  npm install agenda
+  ```
+
+- **Usage**:
+
+  ```javascript
+  const Agenda = require("agenda");
+  const mongoConnectionString = "mongodb://localhost/agenda";
+  const agenda = new Agenda({ db: { address: mongoConnectionString } });
+
+  // Define a job
+  agenda.define("delete account", async (job) => {
+    // Your code to delete accounts
+    console.log("Account deletion job executed");
+  });
+
+  (async function () {
+    // Schedule the job to run daily
+    await agenda.start();
+    await agenda.every("24 hours", "delete account");
+  })();
+  ```
+
+### **3. Using Task Queues**
+
+**a. `Bull`**
+
+`Bull` is a powerful library for managing job queues and scheduling tasks.
+
+- **Installation**:
+
+  ```bash
+  npm install bull
+  ```
+
+- **Usage**:
+
+  ```javascript
+  const Bull = require("bull");
+  const accountDeletionQueue = new Bull(
+    "accountDeletionQueue",
+    "redis://localhost:6379"
+  );
+
+  // Define a job
+  accountDeletionQueue.process(async (job) => {
+    // Your code to delete accounts
+    console.log("Account deletion job executed");
+  });
+
+  // Schedule a job to run after 24 hours
+  accountDeletionQueue.add({}, { delay: 24 * 60 * 60 * 1000 });
+  ```
+
+### **4. Using External Services**
+
+**a. Heroku Scheduler**: If you're using Heroku, you can use the Heroku Scheduler add-on to run tasks at scheduled times.
+
+**b. AWS Lambda and CloudWatch**: AWS Lambda can be used in combination with CloudWatch Events to schedule tasks.
+
+### **Summary:**
+
+- **For simple tasks**, use `setTimeout` or `setInterval`, but keep in mind they are less reliable for long-term or production use.
+- **For more complex scheduling**, use libraries like `node-cron`, `agenda`, or `Bull`, which provide advanced scheduling and job management features.
+- **For cloud-based applications**, consider using external services like Heroku Scheduler or AWS Lambda for scheduling tasks.
+
+## Choose the method that best fits your needs based on the complexity and reliability requirements of your scheduled tasks.
 
 ---
 
@@ -3532,3 +4262,850 @@ console.log(obj[uniqueId]); // Outputs: 123
 **Explanation:**
 
 - **`Symbol`** provides a way to create unique property keys, ensuring that property names do not conflict and are used for special cases.
+
+---
+
+Yes, I understand! You’re looking for a detailed yet clear explanation with a focus on how the concept is used and an example to illustrate it. Here’s how I’ll approach it for each question:
+
+---
+
+**101. An array is declared with `const`, yet we are still able to update or reassign it, such as pushing or pulling elements. Why is this possible?**
+
+**Explanation:**
+
+**`const`** in JavaScript ensures that the variable binding (i.e., the reference to the array) cannot be reassigned. However, it does not make the contents of the array immutable. You can still modify the array’s contents, such as adding or removing elements, because these actions do not change the reference but rather alter the data the reference points to.
+
+- **Usage:**
+  - **Modify Array Elements:** You can use methods like `push()`, `pop()`, `shift()`, and `unshift()` to modify the array’s contents.
+  - **Reassign Reference:** You cannot reassign `const` declared arrays to a new array.
+
+**Usage Example:**
+
+```javascript
+const numbers = [1, 2, 3];
+numbers.push(4); // Modifies the array, not the binding
+console.log(numbers); // Outputs: [1, 2, 3, 4]
+
+// Attempting to reassign the array will cause an error
+// numbers = [5, 6, 7]; // Error: Assignment to constant variable
+```
+
+**Explanation:**
+
+- **`const`** ensures that the array’s reference remains unchanged, but the data within the array can still be altered. This is useful for maintaining a consistent reference while allowing data modifications.
+
+---
+
+**102. Why do we require `express-session`, and what does it do?**
+
+**Explanation:**
+
+**`express-session`** is middleware for Express.js applications that handles session management. Sessions are used to store user-specific data across multiple HTTP requests. This middleware helps maintain a stateful session for each user by storing session data on the server and identifying users via a session ID cookie.
+
+- **Usage:**
+  - **Manage Sessions:** Track user sessions and store data like user preferences or authentication status.
+  - **Session ID Cookies:** Issue cookies to clients that include a session ID to identify users across requests.
+
+**Usage Example:**
+
+```javascript
+const express = require("express");
+const session = require("express-session");
+const app = express();
+
+app.use(
+  session({
+    secret: "your-secret-key", // Used to sign the session ID cookie
+    resave: false, // Save session even if unmodified
+    saveUninitialized: true, // Save new sessions
+    cookie: { secure: false }, // Set to true if using HTTPS
+  })
+);
+
+app.get("/", (req, res) => {
+  if (!req.session.views) {
+    req.session.views = 1;
+  } else {
+    req.session.views++;
+  }
+  res.send(`Number of views: ${req.session.views}`);
+});
+
+app.listen(3000);
+```
+
+**Explanation:**
+
+- **`express-session`** allows you to store and manage user-specific data across multiple requests, providing a way to maintain user state in a web application.
+
+---
+
+**103. What is HLS, and what is the role of `.m3u8` files in HLS?**
+
+**Explanation:**
+
+**HLS (HTTP Live Streaming)** is a protocol for streaming audio and video content over HTTP. It breaks media content into small segments and delivers them sequentially. The `.m3u8` files are playlist files that describe the sequence of media segments and other metadata required for playback.
+
+- **Usage:**
+  - **Stream Media:** Deliver video or audio content over the web.
+  - **Playlist Management:** `.m3u8` files list URLs of media segments and provide metadata for media playback.
+
+**Usage Example:**
+
+An `.m3u8` playlist file might look like this:
+
+```
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXTINF:10.0,
+http://example.com/segment1.ts
+#EXTINF:10.0,
+http://example.com/segment2.ts
+```
+
+**Explanation:**
+
+- **HLS** enables efficient streaming by dividing media into segments and using playlists (`.m3u8` files) to manage these segments, ensuring smooth playback over HTTP.
+
+---
+
+**104. What is the `child_process` library in Node.js, and what are its methods, specifically `stdout` and `stderr`?**
+
+**Explanation:**
+
+**`child_process`** is a built-in Node.js module that allows you to create and manage child processes. These processes run concurrently with the main process and can execute system commands or scripts. The `stdout` and `stderr` properties represent the standard output and error streams of the child process, respectively.
+
+- **Usage:**
+  - **Execute Commands:** Run system commands or external scripts.
+  - **Handle Output:** Access and handle output and error data from child processes.
+
+**Usage Example:**
+
+```javascript
+const { exec } = require("child_process");
+
+exec("ls", (error, stdout, stderr) => {
+  if (error) {
+    console.error(`exec error: ${error}`);
+    return;
+  }
+  console.log(`stdout: ${stdout}`);
+  console.error(`stderr: ${stderr}`);
+});
+```
+
+**Explanation:**
+
+- **`child_process`** provides tools to manage and interact with child processes, allowing you to execute commands and handle their output or errors.
+
+---
+
+**105. What does the `fs` (filesystem) library in Node.js do?**
+
+**Explanation:**
+
+**`fs`** is a core module in Node.js that provides functions to interact with the file system. It allows you to perform operations such as reading, writing, and managing files and directories.
+
+- **Usage:**
+  - **File Operations:** Read from and write to files.
+  - **Directory Management:** Create, delete, and list directories.
+
+**Usage Example:**
+
+```javascript
+const fs = require("fs");
+
+// Reading a file
+fs.readFile("example.txt", "utf8", (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
+
+// Writing to a file
+fs.writeFile("example.txt", "Hello World!", (err) => {
+  if (err) throw err;
+  console.log("File has been saved!");
+});
+```
+
+**Explanation:**
+
+- **`fs`** allows for comprehensive file system operations, making it possible to read, write, and manage files and directories in Node.js applications.
+
+---
+
+**106. What are streams and buffers in Node.js?**
+
+**Explanation:**
+
+- **Streams:** Streams are objects that allow for continuous reading or writing of data. They are efficient for handling large amounts of data by processing it in chunks rather than loading it all at once.
+- **Buffers:** Buffers are temporary storage areas used to hold binary data while it is being processed. They provide a way to work with raw data.
+
+- **Usage:**
+  - **Streams:** Handle large files or real-time data processing.
+  - **Buffers:** Work with binary data, such as reading files or network communication.
+
+**Usage Example:**
+
+```javascript
+const fs = require("fs");
+
+// Reading a file as a stream
+const readStream = fs.createReadStream("example.txt");
+readStream.on("data", (chunk) => {
+  console.log(`Received ${chunk.length} bytes of data.`);
+});
+
+// Using Buffer
+const buffer = Buffer.from("Hello World");
+console.log(buffer.toString()); // Outputs: Hello World
+```
+
+**Explanation:**
+
+- **Streams** and **buffers** are used for efficient data handling in Node.js, with streams managing continuous data flow and buffers working with raw binary data.
+
+---
+
+**107. What are CLI, terminal, bash, and threading in Node.js?**
+
+**Explanation:**
+
+- **CLI (Command-Line Interface):** A text-based interface for interacting with the operating system or applications via commands.
+- **Terminal:** A program that provides a CLI, allowing users to input commands and view output.
+- **Bash:** A Unix shell and command language used in terminal applications for scripting and command execution.
+- **Threading in Node.js:** Node.js is single-threaded for JavaScript execution but uses worker threads and asynchronous operations to handle concurrent tasks.
+
+**Usage Example:**
+
+```bash
+# Bash command to run a Node.js script
+node script.js
+```
+
+**Explanation:**
+
+- **CLI, terminal, and bash** are tools for command-based interaction, while **threading** in Node.js handles concurrency via asynchronous operations and worker threads.
+
+---
+
+**108. How can threading be managed and stopped in Node.js?**
+
+**Explanation:**
+
+Node.js handles threading through the `worker_threads` module, which allows running JavaScript code in parallel threads. You can manage threads using `Worker` objects and terminate them using the `terminate()` method.
+
+- **Usage:**
+  - **Create Workers:** Use `new Worker()` to start new threads.
+  - **Terminate Workers:** Use the `terminate()` method to stop threads.
+
+**Usage Example:**
+
+```javascript
+const { Worker, isMainThread, parentPort } = require("worker_threads");
+
+if (isMainThread) {
+  const worker = new Worker(__filename);
+  worker.on("message", (message) => console.log(message));
+  worker.postMessage("Hello, worker!");
+} else {
+  parentPort.on("message", (message) => {
+    parentPort.postMessage(`Received message: ${message}`);
+  });
+}
+```
+
+**Explanation:**
+
+- **Threading in Node.js** allows concurrent execution of JavaScript code using worker threads, with management and termination capabilities provided by the `worker_threads` module.
+
+---
+
+\*\*109. What are
+
+event emitters in Node.js?\*\*
+
+**Explanation:**
+
+**Event Emitters** are objects that emit named events to which other objects can listen. They facilitate asynchronous communication and event handling within Node.js applications.
+
+- **Usage:**
+  - **Emit Events:** Trigger custom events and pass data to listeners.
+  - **Listen to Events:** Register listeners that respond to emitted events.
+
+**Usage Example:**
+
+```javascript
+const EventEmitter = require("events");
+const emitter = new EventEmitter();
+
+emitter.on("greet", (message) => {
+  console.log(`Received message: ${message}`);
+});
+
+emitter.emit("greet", "Hello, world!");
+```
+
+**Explanation:**
+
+- **Event Emitters** provide a pattern for managing and responding to events, enabling asynchronous communication within Node.js applications.
+
+---
+
+**110. How does Node.js manage modules?**
+
+**Explanation:**
+
+Node.js uses the CommonJS module system to manage modules. Each file is treated as a separate module, and you can export and require modules to share code.
+
+- **Usage:**
+  - **Export Modules:** Use `module.exports` to export functionality from a module.
+  - **Require Modules:** Use `require()` to import and use modules in other files.
+
+**Usage Example:**
+
+```javascript
+// In math.js
+module.exports.add = (a, b) => a + b;
+
+// In app.js
+const math = require("./math");
+console.log(math.add(2, 3)); // Outputs: 5
+```
+
+**Explanation:**
+
+- **Node.js manages modules** using the CommonJS system, allowing code to be modular and reusable through export and import functionality.
+
+---
+
+**111. How is the Node.js event loop different from the event loop in browsers?**
+
+**Explanation:**
+
+- **Node.js Event Loop:** Handles asynchronous I/O operations and callbacks using a single-threaded event loop. It uses different phases to process callbacks, I/O operations, and timers.
+- **Browser Event Loop:** Also single-threaded but handles user interactions, rendering, and network requests. The browser's event loop integrates with the rendering engine to manage visual updates and animations.
+
+**Usage Example:**
+
+In Node.js:
+
+```javascript
+setTimeout(() => console.log("Timeout!"), 0);
+console.log("Log before timeout");
+```
+
+In browsers, the event loop integrates with the rendering engine for smooth visual updates.
+
+**Explanation:**
+
+- **Node.js** and **browser event loops** handle asynchronous tasks differently due to their distinct environments and requirements. Node.js focuses on I/O and server-side operations, while browsers manage user interactions and rendering.
+
+---
+
+**112. What are child processes and parent processes in Node.js?**
+
+**Explanation:**
+
+- **Child Processes:** Processes created by the parent process, typically using the `child_process` module. They can execute system commands or scripts independently.
+- **Parent Processes:** The initial process that spawns child processes. It manages and communicates with them.
+
+**Usage Example:**
+
+```javascript
+const { exec } = require("child_process");
+
+const child = exec("ls", (error, stdout, stderr) => {
+  if (error) {
+    console.error(`exec error: ${error}`);
+    return;
+  }
+  console.log(`stdout: ${stdout}`);
+  console.error(`stderr: ${stderr}`);
+});
+```
+
+**Explanation:**
+
+- **Child processes** allow concurrent execution of tasks, while **parent processes** manage and interact with them, enabling powerful process management in Node.js.
+
+---
+
+**113. What is spawning in Node.js?**
+
+**Explanation:**
+
+**Spawning** refers to creating new child processes in Node.js using the `spawn()` method from the `child_process` module. This method allows for continuous data streams and is useful for long-running processes.
+
+- **Usage:**
+  - **Start Processes:** Use `spawn()` to execute commands and interact with their input/output streams.
+  - **Stream Data:** Handle continuous data from processes.
+
+**Usage Example:**
+
+```javascript
+const { spawn } = require("child_process");
+
+const ls = spawn("ls", ["-lh", "/usr"]);
+
+ls.stdout.on("data", (data) => {
+  console.log(`stdout: ${data}`);
+});
+
+ls.stderr.on("data", (data) => {
+  console.error(`stderr: ${data}`);
+});
+
+ls.on("close", (code) => {
+  console.log(`child process exited with code ${code}`);
+});
+```
+
+**Explanation:**
+
+- **Spawning** processes allows for interactive and continuous data handling, making it suitable for tasks that require real-time communication with external processes.
+
+---
+
+**114. What is Node.js?**
+
+**Explanation:**
+
+**Node.js** is a runtime environment for executing JavaScript code on the server side. Built on Chrome's V8 engine, it uses an event-driven, non-blocking I/O model to handle asynchronous operations efficiently.
+
+- **Usage:**
+  - **Server-Side JavaScript:** Run JavaScript on the server to build scalable applications.
+  - **Non-Blocking I/O:** Handle multiple I/O operations concurrently without blocking the main thread.
+
+**Usage Example:**
+
+```javascript
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Hello World\n");
+});
+
+server.listen(3000, "127.0.0.1", () => {
+  console.log("Server running at http://127.0.0.1:3000/");
+});
+```
+
+**Explanation:**
+
+- **Node.js** enables server-side JavaScript execution with efficient handling of asynchronous tasks, making it suitable for building scalable and high-performance applications.
+
+---
+
+**115. What is clustering in Node.js?**
+
+**Explanation:**
+
+**Clustering** in Node.js involves creating multiple instances of the Node.js application to take advantage of multi-core systems. Each instance runs on a separate core, allowing for better load distribution and improved performance.
+
+- **Usage:**
+  - **Distribute Load:** Use clustering to handle more concurrent requests by spreading them across multiple processes.
+  - **Improve Performance:** Utilize multi-core CPUs for better application scalability.
+
+**Usage Example:**
+
+```javascript
+const cluster = require("cluster");
+const http = require("http");
+const numCPUs = require("os").cpus().length;
+
+if (cluster.isMaster) {
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died`);
+  });
+} else {
+  http
+    .createServer((req, res) => {
+      res.writeHead(200);
+      res.end("Hello World\n");
+    })
+    .listen(8000);
+}
+```
+
+**Explanation:**
+
+- **Clustering** helps improve the scalability of Node.js applications by leveraging multi-core systems to handle more concurrent requests.
+
+---
+
+**116. How is compression handled in Node.js?**
+
+**Explanation:**
+
+**Compression** in Node.js can be managed using middleware like `compression` for Express.js applications. It compresses HTTP responses using gzip or deflate algorithms to reduce the size of data sent over the network.
+
+- **Usage:**
+  - **Reduce Response Size:** Use compression to minimize data size, improving load times.
+  - **Middleware Integration:** Integrate with Express.js to automatically compress responses.
+
+**Usage Example:**
+
+```javascript
+const compression = require("compression");
+const express = require("express");
+const app = express();
+
+app.use(compression());
+
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
+
+app.listen(3000);
+```
+
+**Explanation:**
+
+- **Compression** reduces the size of HTTP responses, enhancing performance and user experience by decreasing data transfer times.
+
+---
+
+**117. How does multi-threading work in Node.js?**
+
+**Explanation:**
+
+**Multi-threading** in Node.js is achieved using the `worker_threads` module, which allows running JavaScript code in parallel threads. Node.js itself uses a single-threaded event loop for JavaScript execution but offloads heavy tasks to worker threads.
+
+- **Usage:**
+  - **Parallel Execution:** Use worker threads to run tasks in parallel, improving performance for CPU-bound operations.
+  - **Thread Management:** Create and manage threads for concurrent execution.
+
+**Usage Example:**
+
+```javascript
+const { Worker, isMainThread, parentPort } = require("worker_threads");
+
+if (isMainThread) {
+  const worker = new Worker(__filename);
+  worker.on("message", (message) => console.log(message));
+  worker.postMessage("Hello, worker!");
+} else {
+  parentPort.on("message", (message) => {
+    parentPort.postMessage(`Received message: ${message}`);
+  });
+}
+```
+
+**Explanation:**
+
+- **Multi-threading** in Node.js allows concurrent execution of tasks, making it suitable for handling CPU-intensive operations in parallel with the event loop.
+
+---
+
+**118. What is cryptography and how are web sockets used in Node.js?**
+
+**Explanation:**
+
+- **Cryptography:** Cryptography involves techniques for securing information through encryption and hashing. In Node.js, the `crypto` module provides methods for these operations, ensuring data privacy and integrity.
+
+- **WebSockets:** WebSockets enable real-time, full-duplex communication between clients and servers. In Node.js, libraries like `ws` facilitate WebSocket connections for real-time data exchange.
+
+- **Usage:**
+  - **Cryptography:** Encrypt sensitive data and verify data integrity.
+  - **WebSockets:** Implement real-time features like chat applications or live notifications.
+
+**Usage Example (WebSocket Server):**
+
+```javascript
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on('connection', (ws)
+
+ => {
+  ws.on('message', (message) => {
+    console.log(`Received message => ${message}`);
+  });
+  ws.send('Hello! Message From Server!!');
+});
+```
+
+**Explanation:**
+
+- **Cryptography** ensures data security, while **WebSockets** facilitate real-time communication, making them essential for secure and interactive web applications.
+
+---
+
+**119. What is `express.urlencoded()` and how does it extend URL encoding?**
+
+**Explanation:**
+
+**`express.urlencoded()`** is middleware in Express.js that parses URL-encoded data from incoming requests. This middleware handles form submissions and query parameters encoded in the URL, making it accessible in `req.body`.
+
+- **Usage:**
+  - **Parse Form Data:** Convert URL-encoded form data into a JavaScript object.
+  - **Handle POST Requests:** Process form submissions in web applications.
+
+**Usage Example:**
+
+```javascript
+const express = require("express");
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+
+app.post("/submit", (req, res) => {
+  console.log(req.body); // Access form data
+  res.send("Form data received");
+});
+
+app.listen(3000);
+```
+
+**Explanation:**
+
+- **`express.urlencoded()`** parses URL-encoded data, making form data available in request objects for processing in Express.js applications.
+
+---
+
+**120. What is EJS?**
+
+**Explanation:**
+
+**EJS (Embedded JavaScript)** is a templating engine for Node.js that allows you to embed JavaScript code within HTML templates. It helps in dynamically generating HTML content by combining templates with data.
+
+- **Usage:**
+  - **Render Dynamic HTML:** Use EJS templates to generate HTML based on data.
+  - **Integrate with Express:** Render views in Express applications using EJS.
+
+**Usage Example:**
+
+```javascript
+const express = require("express");
+const app = express();
+const path = require("path");
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+app.get("/", (req, res) => {
+  res.render("index", { title: "EJS Example", message: "Hello, EJS!" });
+});
+
+app.listen(3000);
+```
+
+**Explanation:**
+
+- **EJS** enables dynamic HTML generation by embedding JavaScript in templates, making it easy to render views with data in Node.js applications.
+
+---
+
+**121. What is the difference between `cookie-parser` and `body-parser`?**
+
+**Explanation:**
+
+- **`cookie-parser`:** Middleware for parsing cookies attached to requests. It populates `req.cookies` with cookie data.
+
+- **`body-parser`:** Middleware for parsing request bodies. It parses incoming request bodies in various formats, such as JSON and URL-encoded data, and populates `req.body`.
+
+- **Usage:**
+  - **`cookie-parser`:** Read cookies from incoming requests.
+  - **`body-parser`:** Handle different types of request bodies.
+
+**Usage Example:**
+
+```javascript
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const app = express();
+
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.post("/data", (req, res) => {
+  console.log(req.body); // URL-encoded data
+  console.log(req.cookies); // Cookies
+  res.send("Data received");
+});
+
+app.listen(3000);
+```
+
+**Explanation:**
+
+- **`cookie-parser`** deals with cookies, while **`body-parser`** handles request bodies, making them complementary middleware in Express.js.
+
+---
+
+**122. What are HTTP methods, and what are the differences between POST, GET, PUT, PATCH, and DELETE?**
+
+**Explanation:**
+
+- **POST:** Submits data to be processed to a specified resource (e.g., form submission).
+- **GET:** Requests data from a specified resource (e.g., retrieving a webpage).
+- **PUT:** Updates a resource with new data (e.g., updating user information).
+- **PATCH:** Partially updates a resource (e.g., updating a single field).
+- **DELETE:** Deletes a specified resource (e.g., removing a user).
+
+- **Usage:**
+  - **POST:** Create new resources.
+  - **GET:** Retrieve resources.
+  - **PUT:** Replace existing resources.
+  - **PATCH:** Modify parts of existing resources.
+  - **DELETE:** Remove resources.
+
+**Usage Example:**
+
+```javascript
+const express = require("express");
+const app = express();
+
+app.post("/create", (req, res) => res.send("Resource created"));
+app.get("/retrieve", (req, res) => res.send("Resource retrieved"));
+app.put("/update", (req, res) => res.send("Resource updated"));
+app.patch("/modify", (req, res) => res.send("Resource partially updated"));
+app.delete("/remove", (req, res) => res.send("Resource deleted"));
+
+app.listen(3000);
+```
+
+**Explanation:**
+
+- **HTTP methods** define different types of operations for interacting with resources, with each method serving specific purposes for creating, retrieving, updating, or deleting data.
+
+---
+
+**123. What is `env` and what does the `config()` method do?**
+
+**Explanation:**
+
+**`env`** typically refers to environment variables used to configure applications. The `config()` method is commonly used in libraries like `dotenv` to load environment variables from a `.env` file into `process.env`.
+
+- **Usage:**
+  - **`dotenv`:** Load environment variables from a `.env` file.
+  - **Environment Variables:** Store configuration data such as database credentials or API keys.
+
+**Usage Example:**
+
+```javascript
+// .env file
+DATABASE_URL=mongodb://localhost:27017/mydb
+
+// app.js
+require('dotenv').config();
+console.log(process.env.DATABASE_URL); // Outputs the database URL from .env file
+```
+
+**Explanation:**
+
+- **`env`** provides a way to manage configuration settings securely, while **`config()`** helps load these settings into the application.
+
+---
+
+**124. What is a Bearer Token?**
+
+**Explanation:**
+
+**Bearer Token** is a type of access token used in authorization headers to access protected resources. It’s included in HTTP requests to verify the identity of the requester.
+
+- **Usage:**
+  - **Authenticate Requests:** Use bearer tokens to grant access to APIs or resources.
+  - **Authorization Header:** Include the token in the `Authorization` header of HTTP requests.
+
+**Usage Example:**
+
+```javascript
+const fetch = require("node-fetch");
+
+fetch("https://api.example.com/data", {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer YOUR_ACCESS_TOKEN",
+  },
+})
+  .then((response) => response.json())
+  .then((data) => console.log(data));
+```
+
+**Explanation:**
+
+- **Bearer Tokens** are used for secure API access, providing a way to authorize requests by including a token in the request headers.
+
+---
+
+**125. What is Node.js and how does it work on the backend?**
+
+**Explanation:**
+
+**Node.js** is a runtime environment that allows JavaScript to be run on the server side. It uses the V8 JavaScript engine and an event-driven, non-blocking I/O model to handle concurrent operations efficiently.
+
+- **Usage:**
+  - **Server-Side Scripting:** Write server-side logic in JavaScript.
+  - **Event-Driven Architecture:** Handle asynchronous operations with callbacks or promises.
+
+**Usage Example:**
+
+```javascript
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Hello World\n");
+});
+
+server.listen(3000, "127.0.0.1", () => {
+  console.log("Server running at http://127.0.0.1:3000/");
+});
+```
+
+**Explanation:**
+
+- **Node.js** enables server-side JavaScript execution, leveraging an asynchronous, non-blocking model to efficiently manage server operations and handle multiple requests concurrently.
+
+---
+
+**126. What are the phases of a payment process, and how can payment integration be achieved using Razorpay?**
+
+**Explanation:**
+
+**Payment Process Phases:**
+
+1. **Initiation:** Customer selects items and proceeds to checkout.
+2. **Authorization:** Payment information is submitted and verified.
+3. **Processing:** The payment gateway processes the transaction.
+4. **Settlement:** Funds are transferred to the merchant’s account.
+5. **Confirmation:** Customer and merchant receive payment confirmation.
+
+**Razorpay Integration:**
+
+- **Setup:** Create a Razorpay account and obtain API keys.
+- **Integration:** Use Razorpay’s SDK or API to handle payments in your application.
+
+**Usage Example:**
+
+```javascript
+const Razorpay = require("razorpay");
+const instance = new Razorpay({
+  key_id: "YOUR_KEY_ID",
+  key_secret: "YOUR_KEY_SECRET",
+});
+
+const order = await instance.orders.create({
+  amount: 50000, // Amount in paise
+  currency: "INR",
+  payment_capture: 1,
+});
+
+console.log(order);
+```
+
+**Explanation:**
+
+- **Payment process** involves various stages from initiation to confirmation, and **Razorpay** provides a robust API for integrating payment processing into applications, facilitating secure transactions and easy setup.
+
+---
