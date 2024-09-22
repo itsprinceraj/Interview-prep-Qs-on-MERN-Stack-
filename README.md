@@ -5203,3 +5203,523 @@ server.listen(3000, "127.0.0.1", () => {
 - **Confirmation:** Razorpay provides callbacks to handle success and failure scenarios, ensuring you can manage the payment process accordingly.
 
 ---
+
+### **127. What is the difference between HTTP request methods ?**
+
+---
+
+Here’s a detailed breakdown of the HTTP request methods: **GET**, **POST**, **PUT**, **PATCH**, **DELETE**, and others.
+
+---
+
+1.  **GET**
+    **Purpose**: Retrieve data from a server.
+
+- **Use case**: When you want to fetch information from a database or API.
+- **Characteristics**:
+  - **Safe**: Does not modify any data.
+  - **Idempotent**: Multiple identical requests return the same result.
+  - **Cacheable**: Responses can be cached to optimize performance.
+- **Example**:
+  ```bash
+  GET /users
+  ```
+  This might retrieve a list of all users from a server.
+
+2.  **POST**
+    **Purpose**: Send data to the server to create or process a resource.
+
+- **Use case**: When submitting a form, uploading a file, or creating a new resource.
+- **Characteristics**:
+  - **Non-idempotent**: Multiple identical requests can create multiple new resources or have different effects.
+  - **Not Cacheable**: Responses are usually not cached.
+  - **Body Content**: Data is sent in the request body.
+- **Example**:
+  ```bash
+  POST /users
+  Body: { "name": "John Doe", "email": "john@example.com" }
+  ```
+  This creates a new user with the provided data.
+
+3.  **PUT**
+    **Purpose**: Update or replace a resource on the server.
+
+- **Use case**: When you want to completely replace an existing resource or create it if it doesn’t exist.
+- **Characteristics**:
+  - **Idempotent**: Multiple identical requests produce the same result (replaces the resource each time).
+  - **Requires Full Data**: Often expects the complete resource data in the request body.
+- **Example**:
+  ```bash
+  PUT /users/1
+  Body: { "name": "John Doe", "email": "john@newdomain.com" }
+  ```
+  This replaces the user with `id=1` with the provided data.
+
+4.  **PATCH**
+    **Purpose**: Partially update a resource on the server.
+
+- **Use case**: When you want to update only specific fields of an existing resource.
+- **Characteristics**:
+  - **Idempotent**: Like `PUT`, multiple identical `PATCH` requests result in the same updated resource.
+  - **Partial Updates**: Only the fields provided in the request body will be updated, leaving the rest untouched.
+- **Example**:
+  ```bash
+  PATCH /users/1
+  Body: { "email": "john@newdomain.com" }
+  ```
+  This updates only the email of the user with `id=1`, without changing other data.
+
+5.  **DELETE**
+    **Purpose**: Remove a resource from the server.
+
+- **Use case**: When you want to delete a resource.
+- **Characteristics**:
+  - **Idempotent**: After the resource is deleted, subsequent identical requests have no additional effect.
+  - **Non-Safe**: Deletes the resource, which is a non-reversible action.
+- **Example**:
+  ```bash
+  DELETE /users/1
+  ```
+  This deletes the user with `id=1`.
+
+---
+
+6.  **HEAD**
+    **Purpose**: Same as `GET`, but it only retrieves the headers, not the body of the resource.
+
+- **Use case**: When you want to check the existence or metadata (like content type, length) of a resource without downloading the actual data.
+- **Characteristics**:
+  - **Safe & Idempotent**: Like `GET`, but no response body is returned.
+- **Example**:
+  ```bash
+  HEAD /users
+  ```
+
+7.  **OPTIONS**
+    **Purpose**: Describes the communication options for the target resource.
+
+- **Use case**: To determine which HTTP methods are supported by the server for a specific resource.
+- **Characteristics**:
+  - **Safe & Idempotent**: Does not affect the resource.
+- **Example**:
+  ```bash
+  OPTIONS /users
+  ```
+
+---
+
+**Comparison Summary:**
+
+| Method      | Usage                     | Safe | Idempotent | Cacheable | Payload/Body |
+| ----------- | ------------------------- | ---- | ---------- | --------- | ------------ |
+| **GET**     | Retrieve a resource       | Yes  | Yes        | Yes       | No           |
+| **POST**    | Create a new resource     | No   | No         | No        | Yes          |
+| **PUT**     | Replace a resource        | No   | Yes        | No        | Yes          |
+| **PATCH**   | Update part of a resource | No   | Yes        | No        | Yes          |
+| **DELETE**  | Delete a resource         | No   | Yes        | No        | No           |
+| **HEAD**    | Retrieve headers only     | Yes  | Yes        | Yes       | No           |
+| **OPTIONS** | Discover allowed methods  | Yes  | Yes        | No        | No           |
+
+---
+
+**Key Points:**
+
+- **GET** is used to retrieve data without making any changes.
+- **POST** is used for creating new resources or sending data to the server.
+- **PUT** replaces an entire resource, while **PATCH** updates a part of a resource.
+- **DELETE** is used to remove a resource.
+- **HEAD** and **OPTIONS** are for metadata and server communication, without modifying resources.
+
+Understanding these methods helps in designing APIs that follow REST principles and provides better control over how resources are accessed or modified.
+
+---
+
+### **128. What is prototype in js?**
+
+---
+
+In JavaScript, **prototypes** are a foundational feature of the language's object-oriented architecture. Every JavaScript object has a prototype, which is another object from which the first object inherits properties and methods.
+
+Here’s a detailed explanation of **prototypes**:
+
+---
+
+1.  **What is a Prototype?**
+
+A **prototype** is essentially a blueprint or a mechanism by which JavaScript objects can inherit properties and methods from another object. When you try to access a property or method on an object, JavaScript will first look for it on the object itself. If it’s not found, it will look at the object's **prototype** to see if the property or method exists there.
+
+---
+
+2.  **Prototype Chain**
+
+JavaScript uses a concept called the **prototype chain**. When a property or method is accessed on an object, JavaScript looks for it in the object itself. If it’s not found, it goes up the prototype chain and looks at the object’s prototype, and then the prototype of that prototype, and so on, until it reaches the end of the chain (`null`).
+
+For example:
+
+```js
+function Person(name) {
+  this.name = name;
+}
+
+Person.prototype.greet = function () {
+  return `Hello, my name is ${this.name}`;
+};
+
+const john = new Person("John");
+console.log(john.greet()); // Output: Hello, my name is John
+```
+
+In this example:
+
+- The `greet` method is not directly defined on the `john` object.
+- JavaScript looks at the `Person.prototype` object for the `greet` method.
+- It finds it and executes it successfully.
+
+---
+
+3.  **Prototype vs `__proto__`**
+
+- **`prototype`**: This is a property of **constructor functions** (like `Person` in the example above) and is used when you create new objects using that constructor function. It defines properties and methods that will be shared across all instances created by that constructor.
+
+  ```js
+  function Animal() {}
+  console.log(Animal.prototype); // Output: Animal {}
+  ```
+
+- **`__proto__`**: This is the **internal prototype** of any given object, which points to the prototype object it inherits from. It's how JavaScript objects are linked in the prototype chain. While it's accessible in many browsers, it's considered a non-standard way of interacting with prototypes.
+
+  ```js
+  const obj = {};
+  console.log(obj.__proto__); // Output: [Object: null prototype] {}
+  ```
+
+  The more standard way to access an object’s prototype is using `Object.getPrototypeOf()`:
+
+  ```js
+  const obj = {};
+  console.log(Object.getPrototypeOf(obj)); // Output: [Object: null prototype] {}
+  ```
+
+---
+
+4.  **Inheritance via Prototypes**
+
+Prototypes are key to achieving inheritance in JavaScript. When objects are created, they inherit properties and methods from their prototype. This allows for sharing common functionality between multiple objects without having to duplicate code.
+
+For example:
+
+```js
+function Vehicle(type) {
+  this.type = type;
+}
+
+Vehicle.prototype.start = function () {
+  return `${this.type} is starting`;
+};
+
+const car = new Vehicle("Car");
+const bike = new Vehicle("Bike");
+
+console.log(car.start()); // Output: Car is starting
+console.log(bike.start()); // Output: Bike is starting
+```
+
+In this case, both `car` and `bike` inherit the `start` method from `Vehicle.prototype`.
+
+---
+
+5.  **Modifying Prototypes**
+
+Prototypes can be modified at runtime. This means that you can add or modify properties and methods in a prototype, and all objects inheriting from that prototype will have access to the updated properties or methods.
+
+For instance:
+
+```js
+Vehicle.prototype.stop = function () {
+  return `${this.type} is stopping`;
+};
+
+console.log(car.stop()); // Output: Car is stopping
+console.log(bike.stop()); // Output: Bike is stopping
+```
+
+---
+
+6.  **Prototype in Built-in Objects**
+
+JavaScript’s built-in objects (such as arrays, strings, and functions) also have prototypes. For example, when you create an array, it inherits methods like `push()`, `pop()`, and `forEach()` from `Array.prototype`.
+
+```js
+const arr = [1, 2, 3];
+console.log(arr.__proto__ === Array.prototype); // Output: true
+```
+
+You can even extend or modify the prototypes of built-in objects, although this is generally discouraged because it can lead to unexpected behavior:
+
+```js
+Array.prototype.sum = function () {
+  return this.reduce((acc, val) => acc + val, 0);
+};
+
+const numbers = [1, 2, 3, 4];
+console.log(numbers.sum()); // Output: 10
+```
+
+---
+
+7.  **`Object.prototype`**
+
+All JavaScript objects (except those explicitly created with `Object.create(null)`) inherit from `Object.prototype`. This is the root of the prototype chain, and it provides common methods such as:
+
+- `toString()`
+- `hasOwnProperty()`
+- `valueOf()`
+
+```js
+const obj = {};
+console.log(obj.toString()); // Output: [object Object]
+```
+
+---
+
+8.  **Prototypal vs Classical Inheritance**
+
+Unlike classical inheritance (used in languages like Java or C++), where classes inherit from other classes, JavaScript uses **prototypal inheritance**, where objects inherit directly from other objects. This makes JavaScript’s inheritance model more flexible.
+
+---
+
+**Conclusion**
+
+In JavaScript:
+
+- Every object has a prototype, which is another object from which it inherits properties and methods.
+- The prototype chain is used to resolve property and method lookups.
+- Constructors have a `prototype` property, while instances have a `__proto__` (or internal prototype).
+- Prototypal inheritance allows sharing of methods and properties between objects, forming a core part of JavaScript's object-oriented nature.
+
+Understanding prototypes is crucial for grasping how inheritance works in JavaScript and how you can share functionality between objects.
+
+---
+
+### **129. What are constructors in js and their type .**
+
+---
+
+In JavaScript, **constructors** are special functions used to create and initialize objects. They allow you to define a blueprint for creating multiple objects with similar properties and methods. The `new` keyword is typically used with a constructor function to create instances of objects.
+
+---
+
+### **Types of Constructors in JavaScript**
+
+1. **Function Constructors**
+2. **Class Constructors (ES6 Classes)**
+3. **Object Constructor**
+4. **Custom Constructors**
+
+---
+
+### 1. **Function Constructors**
+
+Before ES6, JavaScript used function constructors to create objects. A constructor function is a regular JavaScript function, but when called with the `new` keyword, it behaves as a constructor and returns an object.
+
+**Syntax**:
+
+```js
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.greet = function () {
+    console.log(
+      `Hello, my name is ${this.name} and I'm ${this.age} years old.`
+    );
+  };
+}
+
+const john = new Person("John", 30);
+john.greet(); // Output: Hello, my name is John and I'm 30 years old.
+```
+
+**Key Points**:
+
+- When you use `new Person()`, the following happens:
+  - A new empty object is created.
+  - The `this` keyword inside the function refers to this new object.
+  - The properties and methods are added to `this`.
+  - The new object is returned by the constructor.
+
+---
+
+### 2. **Class Constructors (ES6 Classes)**
+
+In ES6, JavaScript introduced the `class` keyword, which provides a cleaner and more intuitive syntax for creating objects, though it's essentially syntactic sugar over the function constructors.
+
+**Syntax**:
+
+```js
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  greet() {
+    console.log(
+      `Hello, my name is ${this.name} and I'm ${this.age} years old.`
+    );
+  }
+}
+
+const jane = new Person("Jane", 25);
+jane.greet(); // Output: Hello, my name is Jane and I'm 25 years old.
+```
+
+**Key Points**:
+
+- The `constructor` method inside a class is a special method used for initializing an object.
+- Like function constructors, classes are also used with the `new` keyword.
+- Methods like `greet()` are automatically added to the prototype of the object, making them memory-efficient (as compared to defining methods inside the function constructor).
+
+---
+
+### 3. **Object Constructor**
+
+JavaScript provides a built-in `Object()` constructor that can be used to create objects. However, it’s rarely used in modern code because object literals (`{}`) are more concise and preferable.
+
+**Syntax**:
+
+```js
+const obj = new Object();
+obj.name = "Alice";
+obj.age = 28;
+
+console.log(obj); // Output: { name: 'Alice', age: 28 }
+```
+
+Equivalent object literal:
+
+```js
+const obj = {
+  name: "Alice",
+  age: 28,
+};
+```
+
+**Key Points**:
+
+- The `Object` constructor is the base object from which all objects inherit in JavaScript.
+- It's better to use object literals `{}` as they are more readable and concise.
+
+---
+
+### 4. **Custom Constructors**
+
+You can create custom constructors to model more specific behavior for your objects. These can be simple or more complex based on the use case.
+
+**Syntax**:
+
+```js
+function Car(brand, model, year) {
+  this.brand = brand;
+  this.model = model;
+  this.year = year;
+}
+
+const myCar = new Car("Toyota", "Camry", 2020);
+console.log(myCar); // Output: Car { brand: 'Toyota', model: 'Camry', year: 2020 }
+```
+
+**Key Points**:
+
+- Custom constructors can have properties and methods specific to the object being created.
+- Like function constructors, they use the `new` keyword for creating instances.
+
+---
+
+### **Constructor Behavior**:
+
+1. **When you call a constructor with `new`**:
+
+   - A new empty object is created.
+   - The constructor function's `this` points to this new object.
+   - The constructor sets up the object by assigning properties to `this`.
+   - The new object is returned from the function (implicitly, if not returned explicitly).
+
+2. **Without `new`**:
+
+   - If you call a constructor function without `new`, `this` won’t refer to the new object but to the global object (or `undefined` in strict mode). This can cause unexpected behavior.
+
+   ```js
+   const john = Person("John", 30); // Called without `new`
+   console.log(john); // Undefined
+   ```
+
+   To ensure constructors are used with `new`, you can check inside the constructor:
+
+   ```js
+   function Person(name, age) {
+     if (!(this instanceof Person)) {
+       return new Person(name, age);
+     }
+     this.name = name;
+     this.age = age;
+   }
+   ```
+
+---
+
+### **Constructor Prototype**:
+
+Every constructor function has a property called `prototype` that defines the properties and methods shared across all instances created by that constructor.
+
+```js
+function Animal(name) {
+  this.name = name;
+}
+
+Animal.prototype.speak = function () {
+  console.log(`${this.name} makes a sound.`);
+};
+
+const dog = new Animal("Dog");
+dog.speak(); // Output: Dog makes a sound
+```
+
+In this example:
+
+- The `speak` method is added to the `Animal.prototype`.
+- All instances of `Animal` share this method, rather than each having its own copy.
+
+---
+
+### **Built-in Constructors**
+
+JavaScript provides several built-in constructors, such as:
+
+- **Object()**: Creates an object.
+- **Array()**: Creates an array.
+- **Function()**: Creates a function.
+- **String()**: Creates a string object.
+- **Number()**: Creates a number object.
+- **Boolean()**: Creates a boolean object.
+
+Example:
+
+```js
+const arr = new Array(1, 2, 3);
+console.log(arr); // Output: [1, 2, 3]
+```
+
+However, it’s often better to use literals for most built-in objects like arrays (`[]`), strings (`''`), numbers (`123`), etc.
+
+---
+
+### **Conclusion**:
+
+- **Function Constructors**: Traditional way to create objects in pre-ES6 JavaScript.
+- **Class Constructors**: A cleaner and modern way introduced in ES6, but they still use prototypal inheritance under the hood.
+- **Object Constructor**: The base constructor for all objects, though object literals are preferable.
+- **Custom Constructors**: Allow you to create multiple objects with similar properties and methods.
+
+Using constructors and understanding their types is essential for working with objects and inheritance in JavaScript.
+
+---
