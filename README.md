@@ -5723,3 +5723,100 @@ However, it’s often better to use literals for most built-in objects like arra
 Using constructors and understanding their types is essential for working with objects and inheritance in JavaScript.
 
 ---
+
+### **128. What is useReducer() hook in React.js and how it can be used to manage complex states?**
+
+The `useReducer` hook in React is a powerful alternative to `useState` for managing complex state logic in functional components. It allows you to manage state transitions in a more predictable manner, especially when the state updates depend on multiple actions or conditions. It is inspired by the reducer pattern from Redux, where state transitions are handled based on the dispatched action.
+
+### Syntax
+
+```js
+const [state, dispatch] = useReducer(reducer, initialState);
+```
+
+- **`state`**: The current state of your component.
+- **`dispatch`**: A function used to send actions to the reducer to update the state.
+- **`reducer`**: A pure function that takes the current state and an action, then returns a new state.
+- **`initialState`**: The initial value for the state.
+
+### How `useReducer` Works
+
+The `useReducer` hook takes two arguments:
+
+1. A **reducer function**: This function receives the current state and an action, then returns a new state based on the action type.
+2. An **initial state**: This is the initial value of the state when the component mounts.
+
+The `dispatch` function is used to trigger changes to the state by sending actions to the reducer.
+
+### Reducer Function
+
+A reducer is simply a function that takes two arguments:
+
+- **state**: The current state of the component.
+- **action**: An object that describes how the state should be updated. Typically, it has a `type` property and sometimes a `payload` with additional data.
+
+Here’s an example reducer:
+
+```js
+function reducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + 1 };
+    case "decrement":
+      return { count: state.count - 1 };
+    default:
+      return state;
+  }
+}
+```
+
+### Example: Simple Counter with `useReducer`
+
+```js
+import React, { useReducer } from "react";
+
+const initialState = { count: 0 };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + 1 };
+    case "decrement":
+      return { count: state.count - 1 };
+    default:
+      throw new Error("Unknown action type");
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      <p>Count: {state.count}</p>
+      <button onClick={() => dispatch({ type: "increment" })}>+</button>
+      <button onClick={() => dispatch({ type: "decrement" })}>-</button>
+    </div>
+  );
+}
+
+export default Counter;
+```
+
+### Explanation
+
+1. **Initial State**: The `initialState` is set to `{ count: 0 }`.
+2. **Reducer**: The `reducer` function checks the action type to decide how to update the state.
+3. **Dispatch**: The `dispatch` function is used to trigger actions (`increment` or `decrement`) that update the state.
+4. **State Management**: The state (`count`) is managed in an immutable way, meaning each update creates a new state object instead of modifying the existing state.
+
+### When to Use `useReducer`?
+
+- When state logic becomes complex (e.g., multiple related state variables, complex conditions).
+- When state updates depend on previous state values.
+- When handling multiple actions that affect the state differently.
+- For scenarios like managing forms, where various actions and state properties are involved.
+
+In simpler cases, `useState` might be sufficient, but for more intricate logic, `useReducer` provides a structured and maintainable way to handle state transitions.
+
+---
